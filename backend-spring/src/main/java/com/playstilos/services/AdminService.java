@@ -20,4 +20,8 @@ public class AdminService {
     public void deleteAdmin(String id){
         adminRepository.deleteById(id);
     }
+
+    public Optional<Admin> getById(String id){
+        return adminRepository.findById(id);
+    }
 }
