@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -58,9 +59,16 @@ public class ProductController {
         }
     }
 
-//    Rota para editar um produto
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product productUpdate){
-        return ResponseEntity.ok(productService.updateProduct(id, productUpdate));
+////    Rota para editar um produto
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product productUpdate){
+//        return ResponseEntity.ok(productService.updateProduct(id, productUpdate));
+//    }
+
+//    rota para retornar todos os produtos
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts(){
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
     }
 }
