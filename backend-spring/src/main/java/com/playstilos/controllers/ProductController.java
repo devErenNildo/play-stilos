@@ -59,11 +59,6 @@ public class ProductController {
         }
     }
 
-////    Rota para editar um produto
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product productUpdate){
-//        return ResponseEntity.ok(productService.updateProduct(id, productUpdate));
-//    }
 
 //    rota para retornar todos os produtos
     @GetMapping
@@ -71,4 +66,11 @@ public class ProductController {
         List<Product> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
+
+
+    ////    Rota para editar um produto
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product productUpdate){
+//        return ResponseEntity.ok(productService.updateProduct(id, productUpdate));
+//    }
 }
