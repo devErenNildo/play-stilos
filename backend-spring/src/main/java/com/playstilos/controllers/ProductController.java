@@ -1,5 +1,6 @@
 package com.playstilos.controllers;
 
+import com.playstilos.domain.comment.Comment;
 import com.playstilos.domain.product.Product;
 import com.playstilos.services.ImageUploadService;
 import com.playstilos.services.ProductService;
@@ -40,7 +41,7 @@ public class ProductController {
         file.transferTo(tempFile);
         String imageUrl = imageUploadService.getImageUrl(tempFile);
 
-        Product product = new Product(null, name, price, category, imageUrl);
+        Product product = new Product(name, price, category, imageUrl);
 
         productService.addProduct(product);
 
@@ -65,6 +66,13 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
+    }
+
+//    adcionar comentário
+    @PostMapping("{id}/comment")
+    public ResponseEntity<Product> addComment(@PathVariable String id, @RequestBody Comment comment){
+        Product updatedProduct = productService.addComment(id, comment);
+        return ResponseEntity.ok(updatedProduct);
     }
 
 

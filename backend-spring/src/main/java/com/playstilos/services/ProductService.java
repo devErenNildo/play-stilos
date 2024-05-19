@@ -1,5 +1,6 @@
 package com.playstilos.services;
 
+import com.playstilos.domain.comment.Comment;
 import com.playstilos.domain.product.Product;
 import com.playstilos.repositories.ProductRepository;
 import org.springframework.beans.BeanUtils;
@@ -40,4 +41,15 @@ public class ProductService {
 
         return productRepository.save(product);
     }
+
+    public Product addComment(String productId, Comment comment){
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        if(optionalProduct.isPresent()){
+            Product product = optionalProduct.get();
+            product.getComments().add(comment);
+            return productRepository.save(product);
+        }
+        throw new RuntimeException("Product not found");
+    }
+
 }
