@@ -1,11 +1,12 @@
 package com.playstilos.services;
 
 import com.playstilos.domain.comment.Comment;
+import com.playstilos.domain.comment.CommentAndAuthor;
+import com.playstilos.domain.product.DetailedProductDTO;
 import com.playstilos.domain.product.Product;
 import com.playstilos.domain.product.ProductAvailable;
 import com.playstilos.domain.product.SimpleProductDTO;
 import com.playstilos.repositories.ProductRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,34 +30,42 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-//  Listar todos os produtos
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
-    }
-
 //  Listar os produtos de forma simples
     public List<SimpleProductDTO> getAllSimpleProduct(){
         List<Product> product = productRepository.findAll();
 
         List<SimpleProductDTO> simpleProductDTO = product.stream()
                 .filter(product1 -> product1.getAvailable() == ProductAvailable.AVAILABLE)
-                .map(product1 -> new SimpleProductDTO(product1.getName(), product1.getPrice(), product1.getImage()))
+                .map(product1 -> new SimpleProductDTO(product1.getId(), product1.getName(), product1.getPrice(), product1.getImage()))
                 .collect(Collectors.toList());
         return simpleProductDTO;
     }
 
+//  listar o produto detalhado
+    public DetailedProductDTO getDetailedProduct(String id){
+        Optional<Product> productOptional = productRepository.findById(id);
+        if (productOptional.isPresent()){
+            Product product = productOptional.get();
+
+            List<CommentAndAuthor> commentAndAuthors = product.getComments().stream()
+                    .map(comment -> new CommentAndAuthor(comment.getComment(), comment.getAuthor().getName(), comment.getAuthor().getImage()))
+                    .toList();
+
+            DetailedProductDTO detailedProduct = new DetailedProductDTO(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getDescription(),
+                    product.getImage(),
+                    commentAndAuthors
+            );
+            return detailedProduct;
+        }
+        throw new RuntimeException("Product not found");
+    }
 
     public void deleteProduct(String id){
         productRepository.deleteById(id);
-    }
-
-    public Product updateProduct(String id, Product productUpdate){
-        Product product = productRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Product not found"));
-
-        BeanUtils.copyProperties(productUpdate, product, "id");
-
-        return productRepository.save(product);
     }
 
 //  Adicionar comentário
@@ -69,5 +78,4 @@ public class ProductService {
         }
         throw new RuntimeException("Product not found");
     }
-
 }

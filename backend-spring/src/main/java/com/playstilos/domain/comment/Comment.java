@@ -1,13 +1,10 @@
 package com.playstilos.domain.comment;
 
 import com.playstilos.domain.user.User;
-import com.playstilos.domain.user.UserCommentDTO;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
@@ -15,12 +12,13 @@ import java.time.LocalDate;
 @Data
 public class Comment {
     private String comment;
-    private String idAuthor;
+    @DBRef(lazy = true)
+    private User author;
     private LocalDate creationDate;
 
-    public Comment(String comment, String idAuthor){
+    public Comment(String comment, User author){
         this.comment = comment;
-        this.idAuthor = idAuthor;
+        this.author = author;
         this.creationDate = LocalDate.now();
     }
 }
