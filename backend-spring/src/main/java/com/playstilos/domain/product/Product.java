@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Product {
     private String image;
     private int stars;
     private List<Comment> comments;
-    private ProductAvailable available;
+    private VisibilityStatus visibility;
 
     public Product(String name, double price, String category, String image){
         this.id = null;
@@ -35,6 +34,6 @@ public class Product {
         this.image = image;
         this.stars = 0;
         this.comments = new ArrayList<>();
-        this.available = ProductAvailable.AVAILABLE;
+        this.visibility = VisibilityStatus.AVAILABLE;
     }
 }

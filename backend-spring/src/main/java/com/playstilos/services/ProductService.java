@@ -4,7 +4,7 @@ import com.playstilos.domain.comment.Comment;
 import com.playstilos.domain.comment.CommentAndAuthor;
 import com.playstilos.domain.product.DetailedProductDTO;
 import com.playstilos.domain.product.Product;
-import com.playstilos.domain.product.ProductAvailable;
+import com.playstilos.domain.product.VisibilityStatus;
 import com.playstilos.domain.product.SimpleProductDTO;
 import com.playstilos.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ public class ProductService {
         List<Product> product = productRepository.findAll();
 
         List<SimpleProductDTO> simpleProductDTO = product.stream()
-                .filter(product1 -> product1.getAvailable() == ProductAvailable.AVAILABLE)
+                .filter(product1 -> product1.getVisibility() == VisibilityStatus.AVAILABLE)
                 .map(product1 -> new SimpleProductDTO(product1.getId(), product1.getName(), product1.getPrice(), product1.getImage()))
                 .collect(Collectors.toList());
         return simpleProductDTO;
@@ -78,4 +78,16 @@ public class ProductService {
         }
         throw new RuntimeException("Product not found");
     }
+
+//   mudar visibilidade do produto
+    public Product changeVisibility(String id){
+        Product product = productRepository.findById(id).get();
+        VisibilityStatus currentStatus;
+        currentStatus = product.getVisibility() == VisibilityStatus.AVAILABLE
+                ? VisibilityStatus.NOTAVAILABLE
+                : VisibilityStatus.AVAILABLE;
+        product.setVisibility(currentStatus);
+        return productRepository.save(product);
+    }
+
 }

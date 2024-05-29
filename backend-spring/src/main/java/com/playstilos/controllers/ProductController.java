@@ -93,4 +93,11 @@ public class ProductController {
 
         return ResponseEntity.ok("comment added");
     }
+
+//  mudar visibilidade do produto
+    @PutMapping("/visibility/{idProduct}")
+    public ResponseEntity<?> changeVisibility(@PathVariable String idProduct){
+
+        return ResponseEntity.ok(productService.changeVisibility(idProduct));
+    }
 }

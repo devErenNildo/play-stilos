@@ -1,12 +1,12 @@
 package com.playstilos.domain.product;
 
-public enum ProductAvailable {
+public enum VisibilityStatus {
     AVAILABLE("true"),
     NOTAVAILABLE("false");
 
     private String available;
 
-    ProductAvailable(String available){
+    VisibilityStatus(String available){
         this.available = available;
     }
 
