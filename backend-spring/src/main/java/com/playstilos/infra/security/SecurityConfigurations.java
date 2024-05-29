@@ -33,6 +33,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "product/home/{id}").permitAll()
                         .requestMatchers(HttpMethod.POST, "product/add").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "product").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "product/visibility/{id}").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
