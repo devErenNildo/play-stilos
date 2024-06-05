@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,9 +61,20 @@ public class CartService {
 
     public Cart addItem(User user, String productId, int quantity){
         Cart cart = checkCart(user);
-        Product product = productRepository.findById(productId).orElseThrow();
-        CartItem cartItem = new CartItem(product, quantity);
-        cart.getItems().add(cartItem);
+
+        Optional<CartItem> existingCartItem = cart.getItems().stream()
+                .filter(item -> item.getCartProduct().getId().equals(productId))
+                .findFirst();
+
+        if (existingCartItem.isPresent()){
+            CartItem cartItem = existingCartItem.get();
+            cartItem.setCartItemQuantity(cartItem.getCartItemQuantity() + quantity);
+        } else {
+            Product product = productRepository.findById(productId).orElseThrow();
+            CartItem newCartItem = new CartItem(product, quantity);
+            cart.getItems().add(newCartItem);
+        }
+
         return cartRepository.save(cart);
     }
 
