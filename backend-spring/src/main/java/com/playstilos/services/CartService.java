@@ -29,13 +29,8 @@ public class CartService {
     @Autowired
     private ProductRepository productRepository;
 
-    public CartDTO getCart(User user){
-        Cart cart = cartRepository.findByUserId(user.getId());
-        if(cart == null){
-            cart = new Cart(user);
-            cartRepository.save(cart);
-        }
-
+//    converte um carrinho em um carrinhoDTO
+    private CartDTO convertCartToCartDTO(Cart cart){
         List<CartItemDTO> itens = cart.getItems().stream()
                 .map(item -> new CartItemDTO(
                         item.getCartProduct().getName(),
@@ -47,12 +42,24 @@ public class CartService {
         return new CartDTO(itens, cart.getCartTotal());
     }
 
-    public Cart addItem(User user, String productId, int quantity){
+//    verifica se o usuário ja possui um carrinho, se não tiver ele cria um.
+    private Cart checkCart(User user){
         Cart cart = cartRepository.findByUserId(user.getId());
         if(cart == null){
             cart = new Cart(user);
             cartRepository.save(cart);
         }
+        return cart;
+    }
+
+    public CartDTO getCart(User user){
+        Cart cart = checkCart(user);
+
+        return convertCartToCartDTO(cart);
+    }
+
+    public Cart addItem(User user, String productId, int quantity){
+        Cart cart = checkCart(user);
         Product product = productRepository.findById(productId).orElseThrow();
         CartItem cartItem = new CartItem(product, quantity);
         cart.getItems().add(cartItem);
