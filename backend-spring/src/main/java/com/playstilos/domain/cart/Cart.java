@@ -20,6 +20,7 @@ public class Cart {
     private String id;
 
     private List<CartItem> items;
+
     private double cartTotal;
 
     @DBRef
